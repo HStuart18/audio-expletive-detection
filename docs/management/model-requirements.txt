@@ -1,0 +1,5 @@
+#System Requirements
+
+- Perform in real-time
+- Identify time-stamp for expletive
+- Identify expletive
