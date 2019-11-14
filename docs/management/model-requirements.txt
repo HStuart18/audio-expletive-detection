@@ -1,5 +1,5 @@
 #System Requirements
 
-- Perform in real-time
+- Perform in real-time (even if it waits for all the audio, execute within a certain period of time such that it could be implemented in real-time)
 - Identify time-stamp for expletive
 - Identify expletive
