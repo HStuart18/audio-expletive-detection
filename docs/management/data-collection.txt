@@ -1,4 +1,4 @@
 #Data Collection
 
 *Data Requirements*
-- needs to contain the timestamps and transcript of desired word. RNN variant will output the probability that a given frame belongs to each expletive. We need to know the ground truth of whether or not a given frame belongs to one of the expletives.
+- needs to contain the timestamps and transcript of desired word. RNN variant will output the probability that a given frame belongs to each expletive. We need to know the ground truth of whether or not a given frame belongs to one of the expletives. Investigate forced/viterbi alignment. May be able to align words of transcript with audio file to get timestamp information for given word automatically.
