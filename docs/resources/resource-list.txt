@@ -1,1 +1,13 @@
-# List of helpful resources
+#List of helpful resources
+**Topics to udnerstand**
+
+Machine learning basics
+- http://faculty.marshall.usc.edu/gareth-james/ISL/ (Chapters 2.1 and 2.2)
+- https://towardsdatascience.com/overfitting-vs-underfitting-a-complete-example-d05dd7e19765
+- https://towardsdatascience.com/cross-validation-70289113a072
+
+Neural network basics
+- https://www.youtube.com/playlist?list=PLZHQObOWTQDNU6R1_67000Dx_ZCJB-3pi
+- https://stats.stackexchange.com/questions/275358/why-is-increasing-the-non-linearity-of-neural-networks-desired (more advanced don't worry about this one yet)
+
+Recurrent neural networks
