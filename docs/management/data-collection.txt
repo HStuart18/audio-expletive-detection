@@ -3,3 +3,9 @@
 *Data Requirements*
 - needs to contain the timestamps and transcript of desired word. RNN variant will output the probability that a given frame belongs to each expletive. We need to know the ground truth of whether or not a given frame belongs to one of the expletives. Investigate forced/viterbi alignment. May be able to align words of transcript with audio file to get timestamp information for given word automatically. Maybe there is no need for a speech recognition RNN, just use viterbi alignment to align expletive to audio with certain similarity threshold.
 - Look at: https://www.dlology.com/blog/how-to-do-real-time-trigger-word-detection-with-keras/ (can a different speaker be used for sayying "activate" and the remaing words?)
+
+- Negative examples
+- Positive examples
+- Noise
+
+(Create audio files for each word and then use the most common and distinct word as trigger word.) (Use https://nats.gitlab.io/swc/ for audio and aligned transcripts)
