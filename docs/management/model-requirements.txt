@@ -3,3 +3,10 @@
 - Perform in real-time (even if it waits for all the audio, execute within a certain period of time such that it could be implemented in real-time)
 - Identify time-stamp for expletive
 - Identify expletive
+
+Model requirements
+
+- output a 1 for all frames comprising a target word with padding.
+- test on the word "happy" with the commands dataset.
+
+- identify when "happy" has just been said to start with
