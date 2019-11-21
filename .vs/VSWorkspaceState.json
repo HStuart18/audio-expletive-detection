@@ -2,9 +2,9 @@
   "ExpandedNodes": [
     "",
     "\\data",
-    "\\data\\processed",
-    "\\src"
+    "\\src",
+    "\\src\\Model_Generators"
   ],
-  "SelectedNode": "\\src",
+  "SelectedNode": "\\src\\Model_Generators\\model1.py",
   "PreviewInSolutionExplorer": false
 }
