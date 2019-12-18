@@ -8,9 +8,14 @@ from pydub import AudioSegment
 from pydub.playback import play
 from pydub.silence import split_on_silence
 import random
+import scipy.io.wavfile as wav
+import scipy.signal as signal
+from matplotlib import pyplot as plt
 
-MAX_EPOCHS = 100_000
+MAX_EPOCHS = 50_000
 fs = 16000
+WINDOW_SIZE = 20
+NFFT=int((WINDOW_SIZE/1000)*fs)
 
 def random_ints_with_sum(n, num_elements):
     """
@@ -47,7 +52,8 @@ def choose_positive_files(max_samples):
     files = []
     for i in range(num_samples):
         file = random.choice(os.listdir(r"D:\ML_Datasets\commands\happy"))
-        audio = AudioSegment.from_file(r"D:\ML_Datasets\commands\happy" + rf"\{file}")
+        with open(r"D:\ML_Datasets\commands\happy" + rf"\{file}", "rb") as f:
+            audio = AudioSegment.from_file(f)
         files.append([audio, len(audio), 1])
         duration += len(audio)
     # Ensure that the positive samples will not exceed the length of the background audio
@@ -55,7 +61,7 @@ def choose_positive_files(max_samples):
         files = files[:-1]
     return files
 
-def choose_negative_files(max_samples, positive_duration):
+def choose_negative_files(max_samples, positive_duration, negative_files):
     """
     Returns up to max_samples negative samples.
     """
@@ -66,7 +72,7 @@ def choose_negative_files(max_samples, positive_duration):
         audio = None
         # Handle failed mp3->wav conversion
         while audio is None:
-            file = random.choice([f for f in os.listdir(r"D:\ML_Datasets\clips") if f.endswith(".wav")])
+            file = random.choice(negative_files)
             try:
                 with open(r"D:\ML_Datasets\clips" + rf"\{file}", "rb") as f:
                     audio = AudioSegment.from_file(f)
@@ -80,19 +86,25 @@ def choose_negative_files(max_samples, positive_duration):
         files = files[:-1]
     return files
 
-background_audio = AudioSegment.from_file(choose_background_file()) 
+with open(choose_background_file(), "rb") as f:
+    background_audio = AudioSegment.from_file(f) 
 ind = random.randint(0, len(background_audio) - 11000)
 background_audio = background_audio[ind:ind + 10000]
+
 for e in range(MAX_EPOCHS):
     # Generate 20 samples using the same random background audio clip
     if (e % 20 == 0):
-        background_audio = AudioSegment.from_file(choose_background_file()) 
+        with open(choose_background_file(), "rb") as f:
+            background_audio = AudioSegment.from_file(f)
         ind = random.randint(0, len(background_audio) - 11000)
         background_audio = background_audio[ind:ind + 10000]
+
+    if (e % 5000 == 0):
+        negative_files = [f for f in os.listdir(r"D:\ML_Datasets\clips") if f.endswith(".wav")]
     
     # Congregate positive and negative samples
     positive_samples = choose_positive_files(3)
-    negative_samples = choose_negative_files(4, sum([e[1] for e in positive_samples]))
+    negative_samples = choose_negative_files(4, sum([e[1] for e in positive_samples]), negative_files)
 
     samples = positive_samples + negative_samples
     random.shuffle(samples)
@@ -114,10 +126,17 @@ for e in range(MAX_EPOCHS):
             timestamps.append((overlay_offsets[i] + duration, overlay_offsets[i] + duration + samples[i][1]))
         duration = duration + samples[i][1] + overlay_offsets[i]
 
-    # Export generated audio clip and associated positive sample alignment file
-    combined_audio.export(rf"data\processed\audio\{e}.wav", format="wav")
-    with open(rf"data\processed\timestamps\{e}.txt", "w+") as f:
+    spec, _, _, _ = plt.specgram(combined_audio.get_array_of_samples(), Fs=fs, NFFT=NFFT, noverlap=120)
+    plt.close()
+
+    # Export generated audio clip, associated positive sample alignment file and spectrogram
+    combined_audio.export(rf"C:\Users\Harry\Desktop\audio\{e}.wav", format="wav")
+
+    with open(rf"C:\Users\Harry\Desktop\timestamps\{e}.txt", "w+") as f:
         for i in range(len(timestamps)):
             f.write(fr"({timestamps[i][0]},{timestamps[i][1]})")
             f.write("\n")
+
+    np.savetxt(rf"C:\Users\Harry\Desktop\spectrograms\{e}.txt", spec)
+
     print(e)
